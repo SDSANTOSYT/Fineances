@@ -1,6 +1,13 @@
-import { Text, View } from "react-native";
+import { CustomButton } from "@/components/CustomButton";
+import { MenuBar } from "@/components/MenuBar";
+import { useState } from "react";
+import { View } from "react-native";
 
 export default function Index() {
+
+  const [per, setPer] = useState(0)
+  
+
   return (
     <View
       style={{
@@ -9,7 +16,9 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+    
+    <MenuBar funcTransactionBtn={()=>{alert("pilla")}}></MenuBar>
+    <CustomButton functionOnPressed={()=>{alert("pilla")}} label="Transacciones"></CustomButton>
     </View>
   );
 }
