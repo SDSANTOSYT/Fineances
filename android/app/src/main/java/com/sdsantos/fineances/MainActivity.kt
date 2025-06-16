@@ -1,4 +1,4 @@
-package com.sdsantos.gestorfinanciero
+package com.sdsantos.fineances
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

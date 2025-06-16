@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.sdsantos.gestorfinanciero'
+    namespace 'com.sdsantos.fineances'
     defaultConfig {
-        applicationId 'com.sdsantos.gestorfinanciero'
+        applicationId 'com.sdsantos.fineances'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -1,4 +1,4 @@
-package com.sdsantos.gestorfinanciero
+package com.sdsantos.fineances
 
 import android.app.Application
 import android.content.res.Configuration
