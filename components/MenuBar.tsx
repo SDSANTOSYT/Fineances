@@ -11,7 +11,7 @@ export function MenuBar({funcTransactionBtn}:{funcTransactionBtn: ()=> void}){
             <TouchableHighlight onPress={funcTransactionBtn}>
                 <Text style = {style.transactionButton}>MOVIMIENTOS</Text>
             </TouchableHighlight>
-            <TouchableHighlight style = {style.exchangeButton}>
+            <TouchableHighlight style = {style.exchangeButton} onPress={() => alert("Pressed!")}>
                 <Image source={require("@/assets/images/exchange-icon.png")} ></Image>
             </TouchableHighlight>
         </View>

@@ -1,13 +1,15 @@
-import { CustomButton } from "@/components/CustomButton";
-import { MenuBar } from "@/components/MenuBar";
-import { useState } from "react";
+import { ExpensesButton } from "@/components/ExpensesButton";
+import { PieChartPreview } from "@/components/PieChartPreview";
 import { View } from "react-native";
 
 export default function Index() {
 
-  const [per, setPer] = useState(0)
+    const data=[
+                {value: 30, color: 'rgb(84,219,234)'},
+                {value: 40, color: 'lightgreen'},
+                {value: 20, color: 'orange'},
+              ];
   
-
   return (
     <View
       style={{
@@ -17,8 +19,8 @@ export default function Index() {
       }}
     >
     
-    <MenuBar funcTransactionBtn={()=>{alert("pilla")}}></MenuBar>
-    <CustomButton functionOnPressed={()=>{alert("pilla")}} label="Transacciones"></CustomButton>
+    <PieChartPreview transactions={data}/>
+    <ExpensesButton functionOnPressed={()=>{alert("Pressed!")}}/>
     </View>
   );
 }
