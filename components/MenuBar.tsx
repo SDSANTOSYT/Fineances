@@ -1,17 +1,17 @@
 import { Colors } from "@/constants/Colors"
 import { Image, StyleSheet, Text, TouchableHighlight, View } from "react-native"
 
-export function MenuBar({funcTransactionBtn}:{funcTransactionBtn: ()=> void}){
+export function MenuBar({transactionOnPress,menuOnPress,exchangeOnPress}:{transactionOnPress: ()=> void,menuOnPress:()=>void,exchangeOnPress:()=>void}){
 
     return(
         <View style = {style.container}>
-            <TouchableHighlight style = {style.menuButton} onPress={() => alert('Pressed!')}>
+            <TouchableHighlight style = {style.menuButton} onPress={menuOnPress}>
                 <Image source={require("@/assets/images/menu-icon.png")} ></Image>
             </TouchableHighlight>
-            <TouchableHighlight onPress={funcTransactionBtn}>
+            <TouchableHighlight onPress={transactionOnPress} style={style.transactionContainer}>
                 <Text style = {style.transactionButton}>MOVIMIENTOS</Text>
             </TouchableHighlight>
-            <TouchableHighlight style = {style.exchangeButton} onPress={() => alert("Pressed!")}>
+            <TouchableHighlight style = {style.exchangeButton} onPress={exchangeOnPress}>
                 <Image source={require("@/assets/images/exchange-icon.png")} ></Image>
             </TouchableHighlight>
         </View>
@@ -36,14 +36,19 @@ const style = StyleSheet.create({
         fontWeight:"bold",
         
     },
+    transactionContainer:{
+        padding:6,
+        borderRadius:30,
+    },
     exchangeButton:{
         width:49,
         height:49,
+        borderRadius:100
         
     },
     menuButton:{
         width:49,
         height:49,
-        
+        borderRadius:100
     }
 })

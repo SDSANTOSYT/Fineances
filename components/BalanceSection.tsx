@@ -1,13 +1,19 @@
 import { Colors } from "@/constants/Colors";
 import { StyleSheet, Text, View } from "react-native";
+import { ExpensesButton } from "./ExpensesButton";
+import { IncomeButton } from "./IncomeButton";
 
 
-export function BalanceCard({balance}: {balance:number}){
+export function BalanceSection({balance, expensesOnPress, incomeOnPress}: {balance:number, expensesOnPress:()=>void, incomeOnPress:()=>void}){
     return(
         <View style = {{alignItems:"center"}}>
             <Text style = {style.title}>SALDO</Text>
-            <View style = {style.container}>
-                <Text style = {style.balance}>$ {balance.toLocaleString()}</Text>
+            <View style={{flexDirection:"row",alignItems:"center"}}>
+                <ExpensesButton onPress={expensesOnPress}/>
+                <View style = {style.container}>
+                    <Text style = {style.balance}>$ {balance.toLocaleString()}</Text>
+                </View>
+                <IncomeButton onPress={incomeOnPress}/>
             </View>
         </View>
     )

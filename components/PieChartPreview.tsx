@@ -1,13 +1,8 @@
-import { Dimensions, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
-const screenWidth = Dimensions.get("window").width;
 
-export function PieChartPreview({transactions}:{transactions: any}){
-    
 
+export function PieChartPreview({transactions, onPress}:{transactions: any, onPress:()=> void}){
     return (
-        <View>
-            <PieChart data={transactions}/>
-        </View>
+            <PieChart data={transactions} onPress={onPress}/>
     )
 }

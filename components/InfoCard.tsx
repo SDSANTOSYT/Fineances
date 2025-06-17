@@ -32,5 +32,4 @@ const style = StyleSheet.create({
         color: Colors["plainText"],
         fontSize: 16
     }
-
 })

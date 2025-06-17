@@ -1,16 +1,14 @@
 import { Colors } from "@/constants/Colors"
 import { StyleSheet, Text, TouchableHighlight } from "react-native"
 
-export function CustomButton({functionOnPressed, label}: {functionOnPressed: () => void, label:string}){
+export function CustomButton({onPress, label}: {onPress: () => void, label:string}){
 
     return(
-        <TouchableHighlight onPress={functionOnPressed} style={style.container}>
+        <TouchableHighlight onPress={onPress} style={style.container}>
                 <Text style = {style.text}>{label}</Text>
         </TouchableHighlight>
     )
 }
-
-
 
 const style = StyleSheet.create({
     container:{
