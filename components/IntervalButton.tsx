@@ -3,12 +3,9 @@ import { DrawerItem } from "@react-navigation/drawer";
 import { StyleSheet } from "react-native";
 
 
-export default function IntervalButton({ interval, onPress }: { interval: string, onPress: () => void }) {
-
+export function IntervalButton({ interval, onPress }: { interval: string, onPress: () => void }) {
     return (
         <DrawerItem label={interval} onPress={onPress} style={style.container} labelStyle={style.text} />
-
-
     );
 }
 

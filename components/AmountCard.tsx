@@ -2,14 +2,13 @@ import { Colors } from "@/constants/Colors";
 import { StyleSheet, Text, View } from "react-native";
 
 
-export function InfoCard({ label, num }: { label: string, num: number }) {
-    const text = label;
-    const balance = num;
-
+export function AmountCard({ amount }: { amount: string }) {
     return (
-        <View style={style.container}>
-            <Text style={style.title}>{text.toUpperCase()}</Text>
-            <Text style={style.balance}>$ {balance.toLocaleString()}</Text>
+        <View style={{ alignItems: "center" }}>
+            <Text style={style.title}>CANTIDAD</Text>
+            <View style={style.container}>
+                <Text style={style.amount}>$ {Number(amount).toLocaleString()}</Text>
+            </View>
         </View>
     )
 }
@@ -17,9 +16,9 @@ export function InfoCard({ label, num }: { label: string, num: number }) {
 const style = StyleSheet.create({
     container: {
         backgroundColor: Colors["highlights3"],
-        borderRadius: 30,
-        width: 116,
-        height: 66,
+        borderRadius: 15,
+        width: 370,
+        height: 79,
         alignItems: "center",
         justifyContent: "center"
     },
@@ -27,10 +26,11 @@ const style = StyleSheet.create({
         color: Colors["highlights1"],
         fontFamily: "Roboto Condensed",
         fontWeight: "bold",
-        fontSize: 14
+        fontSize: 20
     },
-    balance: {
+    amount: {
         color: Colors["plainText"],
-        fontSize: 16
+        fontSize: 36
     }
+
 })

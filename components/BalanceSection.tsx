@@ -4,16 +4,16 @@ import { ExpensesButton } from "./ExpensesButton";
 import { IncomeButton } from "./IncomeButton";
 
 
-export function BalanceSection({balance, expensesOnPress, incomeOnPress}: {balance:number, expensesOnPress:()=>void, incomeOnPress:()=>void}){
-    return(
-        <View style = {{alignItems:"center"}}>
-            <Text style = {style.title}>SALDO</Text>
-            <View style={{flexDirection:"row",alignItems:"center"}}>
-                <ExpensesButton onPress={expensesOnPress}/>
-                <View style = {style.container}>
-                    <Text style = {style.balance}>$ {balance.toLocaleString()}</Text>
+export function BalanceSection({ balance, expensesOnPress, incomeOnPress }: { balance: number, expensesOnPress: () => void, incomeOnPress: () => void }) {
+    return (
+        <View style={{ alignItems: "center" }}>
+            <Text style={style.title}>SALDO</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <ExpensesButton onPress={expensesOnPress} />
+                <View style={style.container}>
+                    <Text style={style.balance}>$ {balance.toLocaleString()}</Text>
                 </View>
-                <IncomeButton onPress={incomeOnPress}/>
+                <IncomeButton onPress={incomeOnPress} />
             </View>
         </View>
     )
@@ -21,20 +21,20 @@ export function BalanceSection({balance, expensesOnPress, incomeOnPress}: {balan
 
 const style = StyleSheet.create({
     container: {
-        backgroundColor:Colors["highlights3"],
-        borderRadius : 30,
+        backgroundColor: Colors["highlights3"],
+        borderRadius: 30,
         width: 245,
         height: 61,
         alignItems: "center",
         justifyContent: "center"
     },
-    title:{
+    title: {
         color: Colors["highlights1"],
         fontFamily: "Roboto Condensed",
         fontWeight: "bold",
-        fontSize:20
+        fontSize: 20
     },
-    balance:{
+    balance: {
         color: Colors["plainText"],
         fontSize: 24
     }

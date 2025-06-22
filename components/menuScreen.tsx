@@ -1,18 +1,18 @@
-import CustomButton from "@/components/CustomButton";
-import IntervalButton from "@/components/IntervalButton";
+import { CustomButton } from "@/components/CustomButton";
+import { IntervalButton } from "@/components/IntervalButton";
 import { Colors } from "@/constants/Colors";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
-
 import { Image, StyleSheet, TouchableHighlight, View } from "react-native";
 
-export default function MenuScreen(props: any) {
+
+export function MenuScreen(props: any) {
     const drawer = props.navigation;
 
     const menuOnPress = () => {
         drawer.closeDrawer();
     }
     const transfersOnPress = () => {
-
+        drawer.navigate("transactions/[type]", { typeOfTransaction: "transfer" })
     }
     const syncOnPress = () => {
 
@@ -35,7 +35,6 @@ export default function MenuScreen(props: any) {
 
     return (
         <View style={{ flex: 1 }}>
-
             <DrawerContentScrollView {...props} style={{ flex: 1, backgroundColor: Colors["backgroundPage"] }}>
                 <View style={style.container}>
                     <TouchableHighlight style={style.menuButton} onPress={menuOnPress}>

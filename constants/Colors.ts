@@ -7,5 +7,5 @@ export const Colors = {
     highlights3: "#541A2E",
     plainText: "#FAFAFA",
     goodText: "#20B26E",
-    badText: "#20B26E",
+    badText: "#EA4444",
 }

@@ -7,6 +7,7 @@ import { Slot, useNavigation, useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
+
 export default function DashboardLayout() {
   const router = useRouter();
   const drawer = useNavigation();

@@ -1,8 +1,8 @@
 import { Colors } from "@/constants/Colors"
 import { StyleSheet, Text, TouchableHighlight } from "react-native"
 
-export default function CustomButton({ onPress, label }: { onPress: () => void, label: string }) {
 
+export function CustomButton({ onPress, label }: { onPress: () => void, label: string }) {
     return (
         <TouchableHighlight onPress={onPress} style={style.container}>
             <Text style={style.text}>{label}</Text>
