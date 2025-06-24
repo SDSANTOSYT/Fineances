@@ -25,7 +25,9 @@ export default function DashboardLayout() {
     alert("boton de movimientos")
   };
   const exchangeOnPress = () => {
-    alert("boton de cambio de cuentas")
+    //alert("boton de cambio de cuentas")
+    router.navigate({ pathname: "/selectorScreen", params: { type: "account", report: String(false) } })
+
   };
   const incomeOnPress = () => {
     alert("boton de ingresos")

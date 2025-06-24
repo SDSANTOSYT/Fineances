@@ -13,8 +13,8 @@ export function AccountItem({ name, icon, balance }: { name: string, icon: "bank
     return (
         <View style={style.container}>
             <Image source={iconSource[name === "Todo" ? "all_accounts" : icon]}></Image>
-            <Text style={[name === "Todo" ? style.all_color : style.account_color, style.name]}>{name}</Text>
-            <Text style={style.balance}>$ {balance.toLocaleString()}</Text>
+            <Text style={[name === "Todo" ? style.all_color : style.account_color, style.name]} adjustsFontSizeToFit={true} numberOfLines={2}>{name}</Text>
+            <Text style={style.balance} adjustsFontSizeToFit={true} numberOfLines={1}>$ {balance.toLocaleString()}</Text>
         </View>
     )
 }
@@ -33,8 +33,9 @@ const style = StyleSheet.create({
     },
     name: {
         fontWeight: "bold",
-        fontSize: 36
-
+        fontSize: 36,
+        width: 140,
+        textAlign: "center",
     },
     all_color: {
         color: Colors["backgroundPage"],
@@ -45,6 +46,7 @@ const style = StyleSheet.create({
     balance: {
         color: Colors["plainText"],
         fontSize: 20,
-        textAlign: "right"
+        textAlign: "right",
+        width: 65
     }
 })
