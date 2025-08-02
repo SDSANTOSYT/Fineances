@@ -3,16 +3,17 @@ import { StyleSheet, Text, View } from "react-native";
 import { Polygon, Svg } from "react-native-svg";
 
 
-export function CategoryItem({ color, name }: { color: string, name: string }) {
+export function TransactionItem({ color, description, money }: { color: string, description: string, money: number }) {
     return (
         <View style={style.container}>
             <Hexagon size={30} x={15} y={15} fill={color} />
-            <Text style={style.name}>{name}</Text>
+            <Text style={style.description}>{description}</Text>
+            <Text style={style.money} adjustsFontSizeToFit={true} numberOfLines={1}>$ {money.toLocaleString()}</Text>
         </View>
     )
 }
 
-// Hexagon Icon for the category
+// Hexagon Icon for the category of the transaction
 const Hexagon = ({ size, x, y, fill }: { size: number, x: number, y: number, fill: string }) => {
     const radius = size / 2;
     const points = [];
@@ -30,6 +31,7 @@ const Hexagon = ({ size, x, y, fill }: { size: number, x: number, y: number, fil
     );
 };
 
+// StyleSheet for the component
 const style = StyleSheet.create({
     container: {
         width: 386,
@@ -43,12 +45,18 @@ const style = StyleSheet.create({
         alignItems: "center"
 
     },
-    name: {
-        color: Colors["plainText"],
+    description: {
+        color: Colors["highlights1"],
         fontWeight: "bold",
-        fontSize: 36,
+        fontSize: 20,
         flexDirection: "row",
         margin: "auto",
         textAlign: "center"
     },
+    money: {
+        color: Colors["plainText"],
+        fontSize: 20,
+        textAlign: "right",
+        width: 65,
+    }
 })
