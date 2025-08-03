@@ -4,9 +4,9 @@ import { MenuBar } from "@/components/MenuBar";
 import { Colors } from "@/constants/Colors";
 import { DrawerActions } from "@react-navigation/native";
 import { Slot, useNavigation, usePathname, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import Animated, { LinearTransition, SlideInDown, SlideInUp, SlideOutDown, SlideOutUp } from "react-native-reanimated";
+import Animated, { LinearTransition, SlideInDown, SlideInUp, SlideOutDown, SlideOutUp, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 
 export default function DashboardLayout() {
@@ -16,14 +16,65 @@ export default function DashboardLayout() {
   const pathname = usePathname();
 
   // Variable to know if we're in the transactionsScreen
+  const [showTransactionsLayout, setShowTransactionsLayout] = useState(false)
   const isTransactionsScreen = pathname.includes("transactionsScreen")
 
-  // Props for animatedView
+  useEffect(() => {
+    if (!isTransactionsScreen) {
+      slotHeightTransactions.value = 0; // Por si regresa
+      slotHeightOriginal.value = 0
+      setShowTransactionsLayout(false);
+      const timeout = setTimeout(() => {
+        slotHeightOriginal.value = 1;
+      }, 300); // espera a que se reorganice
+
+      return () => clearTimeout(timeout);
+
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    if (showTransactionsLayout) {
+      // Espera 300ms para permitir la animación de reorganización
+      const timeout = setTimeout(() => {
+        slotHeightTransactions.value = 1; // Muestra el nuevo Slot
+      }, 300);
+
+      return () => clearTimeout(timeout);
+    } else {
+      slotHeightTransactions.value = 0; // Por si regresa
+
+    }
+  }, [showTransactionsLayout]);
+
+
+
+  // Props for animatedView and animations
   const getAnimatedProps = (direction: "up" | "down") => ({
     layout: LinearTransition.springify(),
     entering: direction === "up" ? SlideInUp.duration(300) : SlideInDown.duration(300),
     exiting: direction === "up" ? SlideOutUp.duration(300) : SlideOutDown.duration(300),
-  })
+  });
+
+
+  const slotHeightOriginal = useSharedValue(1);  // Slot del layout original
+  const slotHeightTransactions = useSharedValue(0); // Slot del layout transacciones
+
+
+  const slotAnimatedStyleOriginal = useAnimatedStyle(() => ({
+    height: withTiming(slotHeightOriginal.value === 1 ? 'auto' : 0, { duration: 300 }),
+    opacity: withTiming(slotHeightOriginal.value, { duration: 300 }),
+    overflow: 'hidden',
+  }));
+
+  const slotAnimatedStyleTransactions = useAnimatedStyle(() => ({
+    height: slotHeightTransactions.value === 1 ? 'auto' : 0,
+    opacity: withTiming(slotHeightTransactions.value, { duration: 300 }),
+    overflow: 'hidden',
+  }));
+
+
+
 
   // Variables for text on infocards
   const [inicialBalance, setInicial] = useState(57024.5);
@@ -37,13 +88,18 @@ export default function DashboardLayout() {
     drawer.dispatch(DrawerActions.toggleDrawer())
   };
   const transactionOnPress = () => {
-    //alert("boton de movimientos")
-    router.navigate('/transactionsScreen')
+    slotHeightOriginal.value = 0; // Oculta Slot del layout original
+    setShowTransactionsLayout(true);
+
+    setTimeout(() => {
+      router.push('/transactionsScreen');
+    }, 300); // Espera a que termine la animación
   };
+
+
   const exchangeOnPress = () => {
     //alert("boton de cambio de cuentas")
     router.navigate({ pathname: "/selectorScreen", params: { type: "account", report: String(false) } })
-
   };
   const incomeOnPress = () => {
     alert("boton de ingresos")
@@ -59,13 +115,16 @@ export default function DashboardLayout() {
         <InfoCard label="INGRESOS" num={incomeBalance} />
         <InfoCard label="EGRESOS" num={expensesBalance} />
       </View>
-      {isTransactionsScreen ? (
+      {showTransactionsLayout ? (
         <>
-          <Animated.View style={{ marginTop: -40 }} {...getAnimatedProps("down")}>
+          <Animated.View style={style.transactionContainer} {...getAnimatedProps("down")}>
             <MenuBar transactionOnPress={transactionOnPress} exchangeOnPress={exchangeOnPress} menuOnPress={menuOnPress} />
-          </Animated.View>
-          <Animated.View {...getAnimatedProps("up")}>
-            <Slot initialRouteName="index"></Slot>
+
+            <Animated.View style={slotAnimatedStyleTransactions}>
+              <Slot initialRouteName="index" />
+            </Animated.View>
+
+
           </Animated.View>
           <Animated.View style={{ alignItems: "center", gap: 15 }} {...getAnimatedProps("up")}>
             <BalanceSection balance={balance} expensesOnPress={expensesOnPress} incomeOnPress={incomeOnPress} />
@@ -74,8 +133,12 @@ export default function DashboardLayout() {
       ) : (
         <>
           <Animated.ScrollView {...getAnimatedProps("down")}>
-            <Slot initialRouteName="index"></Slot>
+            <Animated.View style={slotAnimatedStyleOriginal}>
+              <Slot initialRouteName="index" router={router} />
+            </Animated.View>
           </Animated.ScrollView>
+
+
           <Animated.View style={{ alignItems: "center", gap: 15 }} {...getAnimatedProps("down")}>
             <View style={style.sectionSeparator} />
             <BalanceSection balance={balance} expensesOnPress={expensesOnPress} incomeOnPress={incomeOnPress} />
@@ -108,5 +171,11 @@ const style = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     width: 300,
     height: 1
+  },
+  transactionContainer: {
+    backgroundColor: Colors["buttons2"],
+    marginTop: -40,
+    borderRadius: 30,
+    overflow: "hidden",
   }
 })
