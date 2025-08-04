@@ -3,9 +3,9 @@ import { InfoCard } from "@/components/InfoCard";
 import { MenuBar } from "@/components/MenuBar";
 import { Colors } from "@/constants/Colors";
 import { DrawerActions } from "@react-navigation/native";
-import { Slot, useNavigation, usePathname, useRouter } from "expo-router";
+import { Slot, useFocusEffect, useNavigation, usePathname, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { BackHandler, StyleSheet, View } from "react-native";
 import Animated, { LinearTransition, SlideInDown, SlideInUp, SlideOutDown, SlideOutUp, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 
@@ -15,39 +15,69 @@ export default function DashboardLayout() {
   const drawer = useNavigation();
   const pathname = usePathname();
 
-  // Variable to know if we're in the transactionsScreen
-  const [showTransactionsLayout, setShowTransactionsLayout] = useState(false)
-  const isTransactionsScreen = pathname.includes("transactionsScreen")
+  // Variables for the transision between transactionsScreen and the rest
+  type TransitionState = "idle" | "toTransactions" | "fromTransactions";
+  const [transitionState, setTransitionState] = useState<TransitionState>("idle");
+
+  const isTransactionsScreen = pathname.includes("transactionsScreen");
+  const showTransactionsLayout = transitionState !== "idle" || isTransactionsScreen;
+
+  // listeners to start the transition animations
+  useEffect(() => {
+    if (transitionState === "toTransactions") {
+      slotHeightOriginal.value = 0;
+
+      const timeout = setTimeout(() => {
+        router.navigate("/transactionsScreen");
+      }, 50);
+
+      return () => clearTimeout(timeout);
+    }
+
+    if (transitionState === "fromTransactions") {
+      slotHeightTransactions.value = 0;
+
+      const timeout = setTimeout(() => {
+        router.back()
+      }, 50);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [transitionState]);
 
   useEffect(() => {
-    if (!isTransactionsScreen) {
-      slotHeightTransactions.value = 0; // Por si regresa
-      slotHeightOriginal.value = 0
-      setShowTransactionsLayout(false);
+    if (isTransactionsScreen && transitionState === "toTransactions") {
+      const timeout = setTimeout(() => {
+        slotHeightTransactions.value = 1;
+        setTransitionState("idle");
+      }, 50);
+      return () => clearTimeout(timeout);
+    }
+
+    if (!isTransactionsScreen && transitionState === "fromTransactions") {
       const timeout = setTimeout(() => {
         slotHeightOriginal.value = 1;
-      }, 300); // espera a que se reorganice
-
+        setTransitionState("idle");
+      }, 50);
       return () => clearTimeout(timeout);
-
     }
-  }, [pathname]);
+  }, [pathname, transitionState]);
 
-  useEffect(() => {
-    if (showTransactionsLayout) {
-      // Espera 300ms para permitir la animación de reorganización
-      const timeout = setTimeout(() => {
-        slotHeightTransactions.value = 1; // Muestra el nuevo Slot
-      }, 300);
+  // Listener for when the app goes back from the transactionsScreen
+  useFocusEffect(() => {
+    if (!isTransactionsScreen || transitionState !== "idle") return;
 
-      return () => clearTimeout(timeout);
-    } else {
-      slotHeightTransactions.value = 0; // Por si regresa
+    const onBackPress = () => {
+      setTransitionState("fromTransactions");
+      return true; // Evita el comportamiento predeterminado
+    };
 
-    }
-  }, [showTransactionsLayout]);
+    const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
-
+    return () => {
+      subscription.remove(); // ✅ Esta es la forma correcta
+    };
+  });
 
   // Props for animatedView and animations
   const getAnimatedProps = (direction: "up" | "down") => ({
@@ -56,25 +86,20 @@ export default function DashboardLayout() {
     exiting: direction === "up" ? SlideOutUp.duration(300) : SlideOutDown.duration(300),
   });
 
-
-  const slotHeightOriginal = useSharedValue(1);  // Slot del layout original
-  const slotHeightTransactions = useSharedValue(0); // Slot del layout transacciones
-
+  const slotHeightOriginal = useSharedValue(1);
+  const slotHeightTransactions = useSharedValue(0);
 
   const slotAnimatedStyleOriginal = useAnimatedStyle(() => ({
-    height: withTiming(slotHeightOriginal.value === 1 ? 'auto' : 0, { duration: 300 }),
-    opacity: withTiming(slotHeightOriginal.value, { duration: 300 }),
+    height: withTiming(slotHeightOriginal.value === 1 ? 'auto' : 0, { duration: 50 }),
+    opacity: withTiming(slotHeightOriginal.value, { duration: 50 }),
     overflow: 'hidden',
   }));
 
   const slotAnimatedStyleTransactions = useAnimatedStyle(() => ({
     height: slotHeightTransactions.value === 1 ? 'auto' : 0,
-    opacity: withTiming(slotHeightTransactions.value, { duration: 300 }),
+    opacity: withTiming(slotHeightTransactions.value, { duration: 50 }),
     overflow: 'hidden',
   }));
-
-
-
 
   // Variables for text on infocards
   const [inicialBalance, setInicial] = useState(57024.5);
@@ -88,17 +113,10 @@ export default function DashboardLayout() {
     drawer.dispatch(DrawerActions.toggleDrawer())
   };
   const transactionOnPress = () => {
-    slotHeightOriginal.value = 0; // Oculta Slot del layout original
-    setShowTransactionsLayout(true);
-
-    setTimeout(() => {
-      router.push('/transactionsScreen');
-    }, 300); // Espera a que termine la animación
+    setTransitionState("toTransactions");
   };
 
-
   const exchangeOnPress = () => {
-    //alert("boton de cambio de cuentas")
     router.navigate({ pathname: "/selectorScreen", params: { type: "account", report: String(false) } })
   };
   const incomeOnPress = () => {
@@ -161,7 +179,6 @@ const style = StyleSheet.create({
     gap: 50
   },
   infoContainer: {
-    //backgroundColor: "red",
     flexDirection: "row",
     alignSelf: "stretch",
     marginTop: 60,
